@@ -21,7 +21,10 @@ print(game_test.shape)
 print(player_train.shape)
 print(player_test.shape)
 
+#------------
 # Mis en forme des donnees
+#------------
+
 # Dans game_train: on remarque que pour certains matchs on a aucune information, on veut les supprimer
 # Rem: soit on a tout, soit on a rien. On va chercher pour une variable seulement.
 
