@@ -4,19 +4,18 @@
 import numpy as np
 import scipy
 import sklearn as sk
-import csv
-
+import pandas as pd
+import matplotlib.pyplot as plt
 
 # Importation des donnees
+game_train = pd.read_csv("ML_TEST/game_teams_train.csv")
+player_train = pd.read_csv("ML_TEST/game_player_teams_train.csv")
 
-file=open("ML_TEST/game_player_teams_train.csv","r")
-player_train=csv.reader(file)
-file=open("ML_TEST/game_teams_train.csv","r")
-game_train=csv.reader(file)
+game_test = pd.read_csv("ML_TEST/game_teams_test.csv")
+player_test = pd.read_csv("ML_TEST/game_player_teams_test.csv")
 
-file=open("ML_TEST/game_player_teams_test.csv","r")
-player_test=csv.reader(file)
-file=open("ML_TEST/game_teams_test.csv","r")
-game_test=csv.reader(file)
-
-# On verifie que l'importation c'est bien passee
+# On verifie que les donnees ont bien ete importees
+print game_train.shape
+print game_test.shape
+print player_train.shape
+print player_test.shape
