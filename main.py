@@ -44,3 +44,104 @@ player_train.sort_values(by = ['game_id', 'team_id', 'player_id'], inplace = Tru
 bool = pd.Series(player_train['game_id']).isin(game_to_remove)
 player_train = player_train[:][~bool]
 
+# On retourne sur game_train.
+# On veut remplacer créer une nouvelle variable valant 1 si l'équipe a gg, 0 sinon
+victory = (game_train['winner_id'] == game_train['team_id'])*1
+game_train['victory'] = victory
+
+# On veut remplacer tous les T/F par 1/0 dans les deux dataset
+# Fonction pour le faire dans les jeux de donnees type match
+def replaceTFgame (data):
+	colGame = ['first_blood', 'first_tower', 'first_inhibitor', 'first_baron', 'first_dragon']
+	for col in colGame:
+		data[col].replace(['t','f'], [1,0], inplace = True)
+	return(data)
+
+
+def replaceTFplayer (data):
+	colPlayer = ['first_blood_kill', 'first_blood_assist', 'first_tower_kill', 'first_tower_assist', 'first_inhibitor_kill', 'first_inhibitor_assist']
+	for col in colPlayer:
+		data[col].replace(['t','f'], [1,0], inplace = True)
+	return(data)
+
+game_train = replaceTFgame(game_train)
+player_train = replaceTFplayer(player_train)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
