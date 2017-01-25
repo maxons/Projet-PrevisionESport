@@ -27,15 +27,9 @@ print(player_test.shape)
 
 # Elements que l'on veut jeter
 bool =  pd.isnull(game_train['first_blood'])
-<<<<<<< Updated upstream
-# On garde en mémoire les game_id pour les retirer aussi de l'autre jeu
-game_to_remove = game_train['game_id'][bool]
-# On ne garde que les game_id jugés valable
-=======
 # On garde en memoire les game_id pour les retirer aussi de l'autre jeu
 game_to_remove = np.unique(game_train['game_id'][bool])
 # On ne garde que les game_id juges valable
->>>>>>> Stashed changes
 game_train = game_train['game_id'][~bool]
 
 # On retire 271 matchs sur 1864, soit 15% des données. Cela fait beaucoup de pertes...
