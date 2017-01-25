@@ -22,17 +22,15 @@ print(player_train.shape)
 print(player_test.shape)
 
 # Mis en forme des donnees
-# - f/t -> 0/1, on garde les NaN
-colGame = ['first_blood', 'first_tower', 'first_inhibitor', 'first_baron', 'first_dragon']
-colPlayer = ['first_blood_kill', 'first_blood_assist', 'first_tower_kill', 'first_tower_assist', 'first_inhibitor_kill', 'first_inhibitor_assist']
+# Dans game_train: on remarque que pour certains matchs on a aucune information, on veut les supprimer
+# Rem: soit on a tout, soit on a rien. On va chercher pour une variable seulement.
 
-game_train[colGame]
-player_train[colPlayer]
+# Elements que l'on veut jeter
+bool =  pd.isnull(game_train['first_blood'])
+# On garde en mémoire les game_id pour les retirer aussi de l'autre jeu
+game_to_remove = game_train['game_id'][bool]
+# On ne garde que les game_id jugés valable
+game_train = game_train['game_id'][~bool]
 
-temp = game_train[colGame]
-ind = np.where(temp == 'f')
 
-#--------------
-# On souhaite faire les predictions uniquement avec les donnees propres aux matchs (pour le moment)
-#--------------
 
