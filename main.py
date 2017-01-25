@@ -30,11 +30,14 @@ bool =  pd.isnull(game_train['first_blood'])
 # On garde en memoire les game_id pour les retirer aussi de l'autre jeu
 game_to_remove = np.unique(game_train['game_id'][bool])
 # On ne garde que les game_id juges valable
-game_train = game_train['game_id'][~bool]
+game_train = game_train[:][~bool]
 
 # On retire 271 matchs sur 1864, soit 15% des données. Cela fait beaucoup de pertes...
 
 # Maintenant on veut retirer ces matchs du jeu de donnees avec les joueurs
 # On va commencer par trier les donnees par game_id - team_id - player_id
 player_train.sort_values(by = ['game_id', 'team_id', 'player_id'], inplace = True)
+# Indices des matchs a retirer
+bool = pd.Series(player_train['game_id']).isin(game_to_remove)
+player_train = player_train[:][~bool]
 
