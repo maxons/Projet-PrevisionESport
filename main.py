@@ -14,8 +14,8 @@ player_train=csv.reader(file)
 file=open("ML_TEST/game_teams_train.csv","r")
 game_train=csv.reader(file)
 
-file=open("ML_TEST/game_teams_test.csv","r")
-game_test=csv.reader(file)
+file=open("ML_TEST/game_player_teams_test.csv","r")
+player_test=csv.reader(file)
 file=open("ML_TEST/game_teams_test.csv","r")
 game_test=csv.reader(file)
 
