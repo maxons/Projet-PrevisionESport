@@ -27,9 +27,9 @@ print(player_test.shape)
 
 # Elements que l'on veut jeter
 bool =  pd.isnull(game_train['first_blood'])
-# On garde en mémoire les game_id pour les retirer aussi de l'autre jeu
+# On garde en memoire les game_id pour les retirer aussi de l'autre jeu
 game_to_remove = game_train['game_id'][bool]
-# On ne garde que les game_id jugés valable
+# On ne garde que les game_id juges valable
 game_train = game_train['game_id'][~bool]
 
 
