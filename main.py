@@ -36,7 +36,7 @@ forest = RandomForestClassifier(n_estimators=500, criterion='gini', max_depth=No
 forest = forest.fit(X_train,y_train)
 print(1-forest.oob_score_)
 
-# Erreur de prévision sur le test
+# Erreur de prevision sur le test
 1-forest.score(X_test,y_test)
 # 0.0346
 
@@ -75,6 +75,8 @@ plt.scatter(X_train_pca[:,1],X_train_pca[:,2], s = 5,
 plt.title("ACP")
 plt.show()
 
+# On remarque une belle separation entre les deux groupes
+
 
 X_test_pca = pca.fit(X_test_pca).transform(X_test_pca)
 
@@ -87,7 +89,7 @@ X_test_pca = pca.fit(X_test_pca).transform(X_test_pca)
 forest = forest.fit(X_train_pca,y_train)
 print(1-forest.oob_score_)
 
-# Erreur de prévision sur le test
+# Erreur de prevision sur le test
 1-forest.score(X_test_pca,y_test)
 # 0.0875
 
@@ -95,17 +97,20 @@ print(1-forest.oob_score_)
 # Prendre plus de composantes?
 
 
+n_compo = range(3,21)
+res = np.zeros(18)
 
+for ii in range(0,18):
+	X_train_pca = sk.preprocessing.scale(X_train)
+	X_test_pca = sk.preprocessing.scale(X_test)
+	pca = PCA(n_components = n_compo[ii])
+	X_train_pca = pca.fit(X_train_pca).transform(X_train_pca)
+	X_test_pca = pca.fit(X_test_pca).transform(X_test_pca)
+	forest = forest.fit(X_train_pca,y_train)
+	res[ii] = 1-forest.score(X_test_pca,y_test)
 
-
-
-
-
-
-
-
-
-
+plt.plot(res)
+plt.show()
 
 
 
