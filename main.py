@@ -138,11 +138,11 @@ plt.show()
 
 # ACP
 
-dataset = game_train
+dataset = game_train.drop(['game_id', 'winner_id', 'team_id', 'victory'], 1)
 pca = PCA()
 X_reduced = pca.fit(dataset).transform(dataset)
-C = X_reduced
-
+X_train = X_reduced
+y_train = dataset['victory']
 
 # Graphique
 color = [dataset['victory']]
@@ -166,9 +166,20 @@ plt.title("ACP")
 plt.show()
 
 
+# Random forest
 
+from sklearn.ensemble import RandomForestClassifier
 
+forest = RandomForestClassifier(n_estimators=500, criterion='gini', max_depth=None, min_samples_split=2, min_samples_leaf=1, 
+	max_features='auto', max_leaf_nodes=None, bootstrap=True, oob_score=True)
 
+# Apprentissage
+
+forest = forest.fit(X_train,y_train)
+print(1-forest.oob_score_)
+
+# Erreur de prévision sur le test
+1-forest.score(X_test,y_test)
 
 
 
