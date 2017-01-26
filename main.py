@@ -150,7 +150,3 @@ print(table)
 
 
 
-
-
-
-
