@@ -10,6 +10,10 @@ def print_full(x):
     print(x)
     pd.reset_option('display.max_rows')
 
+#------------
+# Cadre ou on fait les predictions sur les donnees de matches completent
+#------------
+
 # Fonction pour le faire dans les jeux de donnees type match
 def replaceTFgame (data):
 	colGame = ['first_blood', 'first_tower', 'first_inhibitor', 'first_baron', 'first_dragon']
@@ -24,7 +28,7 @@ def replaceTFplayer (data):
 		data[col].replace(['t','f'], [1,0], inplace = True)
 	return(data)
 
-def prepareData (file_game, file_players):
+def prepareDataFull (file_game, file_players):
 	import pandas as pd
 	import numpy as np
 	import sklearn as sk
@@ -75,6 +79,9 @@ def prepareData (file_game, file_players):
 	return X, y
 
 
+#------------
+# Cadre ou on fait les predictions sur les donnees de matches incompletent
+#------------
 
 
 
