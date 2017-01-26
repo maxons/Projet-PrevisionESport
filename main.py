@@ -15,28 +15,42 @@ from sklearn.ensemble import RandomForestClassifier
 
 game_train_f = "ML_TEST/game_teams_train.csv"
 player_train_f = "ML_TEST/game_player_teams_train.csv"
-
 X_train, y_train = fd.prepareData(game_train_f, player_train_f)
+
+game_test_f = "ML_TEST/game_teams_test.csv"
+player_test_f = "ML_TEST/game_player_teams_test.csv"
+X_test, y_test = fd.prepareData(game_test_f, player_test_f)
+
+# ACP
+# On veut décider du bon nombre de composantes a garder
+sk.preprocessing.scale(X_train)
+pca = PCA()
+X_pca = pca.fit(X_train).transform(X_train)
+plt.plot(pca.explained_variance_ratio_)
+plt.show()
+
+# On en choisit 3
+
+pca = PCA(n_components = 3)
+X_pca = pca.fit(X_train).transform(X_train)
+plt.plot(pca.explained_variance_ratio_)
+plt.show()
+
+
 
 # Graphique
 color = y_train
 
 plt.figure(1)
 plt.subplot(311)
-plt.scatter(X_train[:,0],X_train[:,1], s = 5,
+plt.scatter(X_pca[:,0],X_pca[:,1], s = 5,
          cmap = "jet", c=color)
 plt.title("ACP")
 
 plt.subplot(312)
-plt.scatter(X_train[:,1],X_train[:,2], s = 5,
+plt.scatter(X_pca[:,1],X_pca[:,2], s = 5,
          cmap = "jet", c=color)
 plt.title("ACP")
-
-plt.subplot(313)
-plt.scatter(X_train[:,2],X_train[:,3], s = 5,
-         cmap = "jet", c=color)
-plt.title("ACP")
-
 plt.show()
 
 
