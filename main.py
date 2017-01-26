@@ -98,9 +98,25 @@ res = pd.DataFrame(res)
 # On range la matrice obtenu dans game_train
 n = game_train.shape[0]
 game_train = game_train.reindex(range(0, n))
-game_train.join(res)
+game_train = game_train.join(res)
 
+#------------
+# Première analyse
+#------------
 
+# On fait quelques histogrammes
+
+plt.hist(game_train[0], bins = 12)
+plt.title("Distribution des kill")
+plt.show()
+
+plt.hist(game_train[1], bins = 12)
+plt.title("Distribution des death")
+plt.show()
+
+plt.hist(game_train[2], bins = 12)
+plt.title("Distribution des assists")
+plt.show()
 
 
 
