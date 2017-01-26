@@ -108,18 +108,13 @@ res = pd.DataFrame(res)
 
 # On range la matrice obtenu dans game_train
 n = game_train.shape[0]
-game_train = game_train.reindex(range(0, n))
-res = res.reindex(range(0, n))
+game_train.index = (range(0, n))
 game_train = game_train.join(res)
 
 # On veut savoir si des variables contiennent des NaN
 test = game_train.apply(np.isnan)
 for col in test.columns:
 	print(np.unique(test[col]))
-# Il manque effectivement encore des donnees
-# On veut savoir si elles manquent sur les memes matchs ou pas
-for col in test.columns:
-	print(np.where(test[col] == True ))
 
 
 #------------
