@@ -70,9 +70,7 @@ def prepareData (file_game, file_players):
 	game.index = (range(0, n))
 	game = game.join(res)
 	# ACP
-	dataset = game.drop(['game_id', 'winner_id', 'team_id', 'victory'], 1)
-	pca = PCA()
-	X = pca.fit(dataset).transform(dataset)
+	X = game.drop(['game_id', 'winner_id', 'team_id', 'victory'], 1)
 	y = game['victory']
 	return X, y
 
