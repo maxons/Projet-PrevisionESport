@@ -22,7 +22,7 @@ print(player_train.shape)
 print(player_test.shape)
 
 #------------
-# Mis en forme des donnees
+# Rapide mise en forme des donnees
 #------------
 
 # Dans game_train: on remarque que pour certains matchs on a aucune information, on veut les supprimer
@@ -57,7 +57,7 @@ def replaceTFgame (data):
 		data[col].replace(['t','f'], [1,0], inplace = True)
 	return(data)
 
-
+# Idem dans le jeu de donnees type players
 def replaceTFplayer (data):
 	colPlayer = ['first_blood_kill', 'first_blood_assist', 'first_tower_kill', 'first_tower_assist', 'first_inhibitor_kill', 'first_inhibitor_assist']
 	for col in colPlayer:
@@ -68,31 +68,37 @@ game_train = replaceTFgame(game_train)
 player_train = replaceTFplayer(player_train)
 
 
+#------------
+# Fusion des deux jeux de donnees
+#------------
+
+# On souhaite fusionner les deux jeux de donnees afin d'avoir plus d'informations pour faire nos predictions.
+# Le but est de sommer les variables qui peuvent l'etre dans le jeu de donnees jouer/joueur pour en faire des variables par equipe
+# On va perdre certaines informations, comme le champion utilisé par chaque joueur, mais dans ce cas ce n'est pas tres grave car
+# on retrouve en general le meme type de champion dans chaque lane.
 
 
+# Grace a notre façon de trier, on a juste a faire la somme de cinq elements a la suite pour avoir la somme par equipe
+player_temp = player_train
+player_temp.drop(['game_id', 'team_id', 'player_id', 'champion_id','first_blood_kill', 'first_blood_assist', 'first_tower_kill', 
+	'first_tower_assist', 'first_inhibitor_kill', 'first_inhibitor_assist'], 1, inplace = True)
 
+n = int(player_temp.shape[0]/5)
+m = player_temp.shape[1]
 
+# Matrice qui va contenir toutes les sommes
+res = np.arange(n*m).reshape(n, m)
 
+# On calcule les sommes
+for ii in range(0, n):
+	res[ii:(ii+1)] = np.array(player_temp[5*ii:5*(ii+1)].sum(0)).reshape(1,m)
 
+res = pd.DataFrame(res)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+# On range la matrice obtenu dans game_train
+n = game_train.shape[0]
+game_train = game_train.reindex(range(0, n))
+game_train.join(res)
 
 
 
