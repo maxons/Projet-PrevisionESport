@@ -7,6 +7,14 @@ import sklearn as sk
 import pandas as pd
 import matplotlib.pyplot as plt
 import math
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import Imputer
+
+def print_full(x):
+    pd.set_option('display.max_rows', len(x))
+    print(x)
+    pd.reset_option('display.max_rows')
+
 
 # Importation des donnees
 game_train = pd.read_csv("ML_TEST/game_teams_train.csv")
@@ -79,9 +87,12 @@ player_train = replaceTFplayer(player_train)
 
 
 # Grace a notre façon de trier, on a juste a faire la somme de cinq elements a la suite pour avoir la somme par equipe
-player_temp = player_train
-player_temp.drop(['game_id', 'team_id', 'player_id', 'champion_id','first_blood_kill', 'first_blood_assist', 'first_tower_kill', 
-	'first_tower_assist', 'first_inhibitor_kill', 'first_inhibitor_assist'], 1, inplace = True)
+player_temp = player_train.drop(['game_id', 'team_id', 'player_id', 'champion_id','first_blood_kill',
+ 'first_blood_assist', 'first_tower_kill', 'first_tower_assist', 'first_inhibitor_kill', 'first_inhibitor_assist'], 1)
+
+# On retire les valeurs manquantes de 'killing_sprees' et 'double_kills' en les estimant par la moyenne
+imp = Imputer(missing_values='NaN', strategy='mean', axis=0)
+player_temp = imp.fit_transform(player_temp)
 
 n = int(player_temp.shape[0]/5)
 m = player_temp.shape[1]
@@ -98,7 +109,18 @@ res = pd.DataFrame(res)
 # On range la matrice obtenu dans game_train
 n = game_train.shape[0]
 game_train = game_train.reindex(range(0, n))
+res = res.reindex(range(0, n))
 game_train = game_train.join(res)
+
+# On veut savoir si des variables contiennent des NaN
+test = game_train.apply(np.isnan)
+for col in test.columns:
+	print(np.unique(test[col]))
+# Il manque effectivement encore des donnees
+# On veut savoir si elles manquent sur les memes matchs ou pas
+for col in test.columns:
+	print(np.where(test[col] == True ))
+
 
 #------------
 # Première analyse
@@ -117,7 +139,6 @@ plt.show()
 plt.hist(game_train[2], bins = 12)
 plt.title("Distribution des assists")
 plt.show()
-
 
 
 
