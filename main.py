@@ -10,11 +10,6 @@ import math
 from sklearn.decomposition import PCA
 from sklearn.preprocessing import Imputer
 
-def print_full(x):
-    pd.set_option('display.max_rows', len(x))
-    print(x)
-    pd.reset_option('display.max_rows')
-
 
 # Importation des donnees
 game_train = pd.read_csv("ML_TEST/game_teams_train.csv")
@@ -58,20 +53,6 @@ victory = (game_train['winner_id'] == game_train['team_id'])*1
 game_train['victory'] = victory
 
 # On veut remplacer tous les T/F par 1/0 dans les deux dataset
-# Fonction pour le faire dans les jeux de donnees type match
-def replaceTFgame (data):
-	colGame = ['first_blood', 'first_tower', 'first_inhibitor', 'first_baron', 'first_dragon']
-	for col in colGame:
-		data[col].replace(['t','f'], [1,0], inplace = True)
-	return(data)
-
-# Idem dans le jeu de donnees type players
-def replaceTFplayer (data):
-	colPlayer = ['first_blood_kill', 'first_blood_assist', 'first_tower_kill', 'first_tower_assist', 'first_inhibitor_kill', 'first_inhibitor_assist']
-	for col in colPlayer:
-		data[col].replace(['t','f'], [1,0], inplace = True)
-	return(data)
-
 game_train = replaceTFgame(game_train)
 player_train = replaceTFplayer(player_train)
 
