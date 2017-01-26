@@ -13,21 +13,17 @@ import functions_data as fd
 import functions_data as fd
 from sklearn.ensemble import RandomForestClassifier
 
-# On remarque en observant les donnees que pour certains matchs on a tres peu de donnees. 
-# On va faire une modelisation dans ce cas, et une autre lorsqu'on aura toutes les donnees.
-# On commence par le cas ou on a toutes les donnees
-
 #------------
 # Importation des donnees
 #------------
 
 game_train_f = "ML_TEST/game_teams_train.csv"
 player_train_f = "ML_TEST/game_player_teams_train.csv"
-X_train, y_train = fd.prepareDataFull(game_train_f, player_train_f)
+X_train, y_train = fd.prepareData(game_train_f, player_train_f)
 
 game_test_f = "ML_TEST/game_teams_test.csv"
 player_test_f = "ML_TEST/game_player_teams_test.csv"
-X_test, y_test = fd.prepareDataFull(game_test_f, player_test_f)
+X_test, y_test = fd.prepareData(game_test_f, player_test_f)
 
 #------------
 # Apprentissage sur les donnees sans ACP
@@ -142,9 +138,11 @@ y_chap = forest.predict(X_test)
 table=pd.crosstab(y_test, y_chap)
 print(table)
 
-#************************************************
 
-# Maintenant on traite le cas ou on peu de donnees
+
+
+
+
 
 
 
