@@ -136,8 +136,34 @@ plt.title("Distribution des assists")
 plt.show()
 
 
+# ACP
+
+dataset = game_train
+pca = PCA()
+X_reduced = pca.fit(dataset).transform(dataset)
+C = X_reduced
 
 
+# Graphique
+color = [dataset['victory']]
+
+plt.figure(1)
+plt.subplot(311)
+plt.scatter(X_reduced[:,0],X_reduced[:,1], s = 5,
+         cmap = "jet", c=color)
+plt.title("ACP")
+
+plt.subplot(312)
+plt.scatter(X_reduced[:,1],X_reduced[:,2], s = 5,
+         cmap = "jet", c=color)
+plt.title("ACP")
+
+plt.subplot(313)
+plt.scatter(X_reduced[:,2],X_reduced[:,3], s = 5,
+         cmap = "jet", c=color)
+plt.title("ACP")
+
+plt.show()
 
 
 
