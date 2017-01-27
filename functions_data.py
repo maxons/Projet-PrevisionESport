@@ -1,5 +1,3 @@
-import pandas as pd
-
 #------------
 # Fonctions qui permettent de mettre en place les donnees
 #------------
@@ -83,6 +81,7 @@ def impute_player (player):
 	player[colToRem] = imp.fit_transform(player[colToRem])
 	return(player)
 
+# Met les donnees en forme dans le cas ou on veut celles avec toutes les variables disponibles
 def prepareData (file_game, file_players):
 	import pandas as pd
 	import numpy as np
@@ -91,7 +90,7 @@ def prepareData (file_game, file_players):
 	from sklearn.preprocessing import Imputer
 	game = pd.read_csv(file_game)
 	player = pd.read_csv(file_players)
-	# On veut remplacer tous les T/F par 1/0 dans les deux dataset
+	# On veut remplacer tous les T/F par 1/0 dans les deux datasets
 	game = replaceTFgame(game)
 	player = replaceTFplayer(player)
 	player = impute_player(player)
@@ -125,18 +124,15 @@ def prepareData (file_game, file_players):
 	for ii in range(0, n):
 		res[ii:(ii+1)] = np.array(player_temp[5*ii:5*(ii+1)].sum(0)).reshape(1,m)
 	res = pd.DataFrame(res)
-	# On range la matrice obtenu dans game
+	# On range la matrice obtenue dans game
 	n = game.shape[0]
 	game.index = (range(0, n))
 	game = game.join(res)
-	# ACP
 	X = game.drop(['game_id', 'winner_id', 'team_id', 'victory'], 1)
 	y = game['victory']
 	return X, y
 
-
-
-
+# Cas ou on a peu de variables disponibles
 def prepare_few_variable (game_file, player_file):
 	import pandas as pd
 	import numpy as np
@@ -157,7 +153,7 @@ def prepare_few_variable (game_file, player_file):
 	# Indices de(s) individu(s) ou on a x valeurs manquantes
 	nan_40 = np.where(nb_nan == 40)[0]
 	col_nan_40 = (player.loc[nan_40].apply(np.isnan)*1).apply(sum, 0)
-	# On ne garde que les variables associes a 40 valeurs manquantes
+	# On ne garde que les variables associees a 40 valeurs manquantes
 	col_to_drop = col_nan_40[np.where(col_nan_40 > 0)[0]].index
 	player = player.drop(col_to_drop, 1)
 	player.sort_values(by = ['game_id', 'team_id', 'gold_earned'], inplace = True)
@@ -180,7 +176,7 @@ def prepare_few_variable (game_file, player_file):
 		res[ii][3*m:4*m] = X.loc[ii+3]
 		res[ii][4*m:5*m] = X.loc[ii+4]
 	res = pd.DataFrame(res)
-	# On range la matrice obtenu dans game
+	# On range la matrice obtenue dans game
 	n = game.shape[0]
 	game.index = (range(0, n))
 	game = game.join(res)

@@ -61,7 +61,7 @@ col_nan_40 = (player.loc[nan_40].apply(np.isnan)*1).apply(sum, 0)
 col_nan_39[np.where(col_nan_39 == 0)[0]]
 col_nan_40[np.where(col_nan_40 == 0)[0]]
 
-# On ne garde que les variables associes a 40 valeurs manquantes
+# On ne garde que les variables associees a 40 valeurs manquantes
 col_to_drop = col_nan_40[np.where(col_nan_40 > 0)[0]].index
 player = player.drop(col_to_drop, 1)
 
@@ -99,7 +99,7 @@ for ii in range(0, n):
 
 res = pd.DataFrame(res)
 
-# On range la matrice obtenu dans game
+# On range la matrice obtenue dans game
 n = game.shape[0]
 
 game.index = (range(0, n))

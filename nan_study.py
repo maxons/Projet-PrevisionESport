@@ -77,8 +77,8 @@ col_nan_3[np.where(col_nan_3 > 0)[0]]
 col_nan_39[np.where(col_nan_39 > 0)[0]]
 col_nan_40[np.where(col_nan_40 > 0)[0]]
 
-# On remarque que dans chacun des classes, il manque toujours les meme variable
-# Mais entre chaque classe on ne retrouve pas les meme variables, sauf dans les deux dernieres
+# On remarque que dans chacunes des classes, il manque toujours les memes variables
+# Mais entre chaque classe on ne retrouve pas les memes variables, sauf dans les deux dernieres
 # La difference entre 39 et 40 se fait pour le champion_id
 
 # Le cas ou on a 1 valeur manquante ne nous interesse pas car il ne concerne que le player_id
@@ -86,10 +86,7 @@ col_nan_40[np.where(col_nan_40 > 0)[0]]
 # Dans les cas ou il nous manque 2 ou 3 variables, on va estimer les valeurs manquantes grace a du kNN
 # On garde les individus ayant un nombre <= 3 valeurs manquantes
 
-
 # Il faut verifier que les memes variables sont touchees pour les datasets de test
-
-
 
 
 game_test_f = "ML_TEST/game_teams_test.csv"
@@ -125,7 +122,7 @@ nb_nan_t = (game_t.apply(np.isnan)*1).apply(sum,0)
 # Individu par individu, le nombre de valeurs manquantes
 nb_nan_t = (player_t.apply(np.isnan)*1).apply(sum,1)
 
-# On regarde pour chacune des classes obtenues les variables impliquees
+# On regarde pour chacunes des classes obtenues les variables impliquees
 # Indices de(s) individu(s) ou on a x valeurs manquantes
 nan_1_t = np.where(nb_nan_t == 1)[0]
 # Somme sur chaque variable pour savoir combien de fois la variable est impliquee pour x valeurs manquantes
@@ -184,8 +181,6 @@ from sklearn.neighbors import NearestNeighbors
 
 X = player.drop(['game_id', 'team_id', 'player_id'], 1)
 X['champion_id'] = X['champion_id'].astype('category')
-
-
 
 # On se place dans le cas ou on a deux valeurs manquantes
 

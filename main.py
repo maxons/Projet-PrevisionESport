@@ -152,7 +152,7 @@ print(table)
 # Cas ou on prend peu de donnees
 #------------
 
-print("On veut maintenant quand on a peu de variables")
+print("On veut maintenant le cas ou on a peu de variables")
 
 game_train_f = "ML_TEST/game_teams_train.csv"
 player_train_f = "ML_TEST/game_player_teams_train.csv"
