@@ -143,17 +143,14 @@ distances, indices = nbrs.kneighbors(X_2)
 col_with_info = X[colToRem]
 col_with_info = col_with_info.drop(col_with_info.index[to_rem], 0)
 
-np.isnan
-
 from scipy import stats
-
 
 # Lignes qui nous interessent
 to_see = np.where((col_with_info.apply(np.isnan)*1).apply(sum, 1) > 0)[0]
 for ind in indices[to_see]:
 	# Vrais indices
 	t_ind = col_with_info.index[ind]
-	# mode des valeurs a remplacer
+	# mode des valeurs a remplacer (les deux variables sont booleenes)
 	vals = col_with_info.loc[t_ind].apply(stats.mode,0)
 	# On effectue la mise a jour
 	player = player.set_value(t_ind[0], colToRem[0], vals[0][0][0])
@@ -169,7 +166,46 @@ col_nan_2 = (player.loc[nan_2].apply(np.isnan)*1).apply(sum, 0)
 
 
 
+# On fait pareil avec trois valeurs manquantes
 
+
+
+# On retire les trois colonnes porteuses des valeurs
+colToRem = col_nan_3[np.where(col_nan_3 > 0)[0]].index
+X_temp = X.drop(colToRem, 1)
+# On retire les individus ayant plus de trois valeurs manquantes
+to_rem = np.where(nb_nan > 3)[0]
+X_3 = X_temp.drop(X_temp.index[to_rem], 0)
+X_3 = sk.preprocessing.normalize(X_3)
+
+# On utilise 'ball_tree' car adaptee bcp variables
+# J'ai du sensiblement augmenter le nombre de voisins car on se retrouve souvent avec des voisins etant eux-même
+# Avec ces trois valeurs manquantes...
+nbrs = NearestNeighbors(n_neighbors=15, algorithm='ball_tree').fit(X_3)
+distances, indices = nbrs.kneighbors(X_3)
+# indices renvoie les indices sur plus proches voisins
+# mais il a remis les indices a 0, pas de memoire des vrais indices de X_3
+
+# Variable qui contient les deux colonnes que l'on souhaite reconstruire
+col_with_info = X[colToRem]
+col_with_info = col_with_info.drop(col_with_info.index[to_rem], 0)
+
+# Lignes qui nous interessent
+to_see = np.where((col_with_info.apply(np.isnan)*1).apply(sum, 1) > 0)[0]
+for ind in indices[to_see]:
+	# Vrais indices
+	t_ind = col_with_info.index[ind]
+	# print(col_with_info.loc[t_ind])
+	vals = col_with_info.loc[t_ind].apply(np.mean,0)
+	# On effectue la mise a jour
+	player = player.set_value(t_ind[0], colToRem[0], vals[0])
+	player = player.set_value(t_ind[0], colToRem[1], vals[1])
+	player = player.set_value(t_ind[0], colToRem[2], vals[2])
+
+
+# Si des individus ont encore des valeurs manquantes on prend la moyenne sur lensemble de la variable
+imp = Imputer(missing_values='NaN', strategy='mean', axis=0)
+player[colToRem] = imp.fit_transform(player[colToRem])
 
 
 
