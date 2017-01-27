@@ -80,15 +80,22 @@ n = int(X.shape[0]/5)
 m = X.shape[1]
 M = m*5
 
+
+# Pour ces donnees, on ne va pas faire la somme des variables restantes comme on a pu le faire avant
+# On a trier les joueurs par or gagne, en considerant que l'or gagne dans une partie est revelateur
+# de l'importance qu'a eu le joueur dans la partie
+# On trie donc les joueurs par or gagne, et ensuite on va mettre les joueurs a la ligne pour creer de 
+# nouvelles variables
+
 # Matrice qui va contenir toutes les variables
 res = np.arange(n*M).reshape(n, M)
 # On calcule les sommes
 for ii in range(0, n):
-	res[ii][0:6] = X.loc[ii]
-	res[ii][6:12] = X.loc[ii+1] 
-	res[ii][12:18] = X.loc[ii+2]
-	res[ii][18:24] = X.loc[ii+3]
-	res[ii][24:30] = X.loc[ii+4]
+	res[ii][0:m] = X.loc[ii]
+	res[ii][m:2*m] = X.loc[ii+1] 
+	res[ii][2*m:3*m] = X.loc[ii+2]
+	res[ii][3*m:4*m] = X.loc[ii+3]
+	res[ii][4*m:5*m] = X.loc[ii+4]
 
 res = pd.DataFrame(res)
 

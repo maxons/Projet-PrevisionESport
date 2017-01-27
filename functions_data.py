@@ -137,6 +137,55 @@ def prepareData (file_game, file_players):
 
 
 
-
+def prepare_few_variable (game_file, player_file):
+	import pandas as pd
+	import numpy as np
+	game = pd.read_csv(game_file)
+	game = replaceTFgame(game)
+	player = pd.read_csv(player_file)
+	player = replaceTFplayer(player)
+	# Donnees des matches
+	nb_nan = (game.apply(np.isnan)*1).apply(sum,0)
+	game = game.drop(game.columns[nb_nan > 0], 1)
+	# Qui a gagne?
+	victory = (game['winner_id'] == game['team_id'])*1
+	game['victory'] = victory
+	# Donnees des joueurs
+	# Individu par individu, le nombre de valeurs manquantes
+	nb_nan = (player.apply(np.isnan)*1).apply(sum,1)
+	# On regarde pour chacune des classes obtenues les variables impliquees
+	# Indices de(s) individu(s) ou on a x valeurs manquantes
+	nan_40 = np.where(nb_nan == 40)[0]
+	col_nan_40 = (player.loc[nan_40].apply(np.isnan)*1).apply(sum, 0)
+	# On ne garde que les variables associes a 40 valeurs manquantes
+	col_to_drop = col_nan_40[np.where(col_nan_40 > 0)[0]].index
+	player = player.drop(col_to_drop, 1)
+	player.sort_values(by = ['game_id', 'team_id', 'gold_earned'], inplace = True)
+	X = player.drop(['game_id', 'team_id', 'player_id'], 1)
+	n = int(X.shape[0]/5)
+	m = X.shape[1]
+	M = m*5
+	# Pour ces donnees, on ne va pas faire la somme des variables restantes comme on a pu le faire avant
+	# On a trier les joueurs par or gagne, en considerant que l'or gagne dans une partie est revelateur
+	# de l'importance qu'a eu le joueur dans la partie
+	# On trie donc les joueurs par or gagne, et ensuite on va mettre les joueurs a la ligne pour creer de 
+	# nouvelles variables
+	# Matrice qui va contenir toutes les variables
+	res = np.arange(n*M).reshape(n, M)
+	# On calcule les sommes
+	for ii in range(0, n):
+		res[ii][0:m] = X.loc[ii]
+		res[ii][m:2*m] = X.loc[ii+1] 
+		res[ii][2*m:3*m] = X.loc[ii+2]
+		res[ii][3*m:4*m] = X.loc[ii+3]
+		res[ii][4*m:5*m] = X.loc[ii+4]
+	res = pd.DataFrame(res)
+	# On range la matrice obtenu dans game
+	n = game.shape[0]
+	game.index = (range(0, n))
+	game = game.join(res)
+	X = game.drop(['game_id', 'winner_id', 'team_id', 'victory'], 1)
+	y = game['victory']
+	return X, y
 
 
