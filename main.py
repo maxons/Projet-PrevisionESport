@@ -11,6 +11,7 @@ from sklearn.decomposition import PCA
 from sklearn.preprocessing import Imputer
 import functions_data as fd
 from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import GridSearchCV
 
 #------------
 # Importation des donnees
@@ -121,15 +122,15 @@ plt.show()
 # On admet que la meilleure solution est obtenue sans ACP. On va chercher a optimiser l'algorithme
 
 print("Optimisation du random forest")
-from sklearn.model_selection import GridSearchCV
-param = [{"max_features":list(range(2,15))}]
-best_feat = GridSearchCV(RandomForestClassifier(n_estimators=100),param,cv=5,n_jobs=-1)
+
+param_grid = {'n_estimators': [50, 100, 200, 500, 700], 'max_features': ['auto', 'sqrt', 'log2']}
+best_feat = GridSearchCV(RandomForestClassifier(n_estimators=100), param_grid = param_grid, cv=10, n_jobs=-1)
 best_feat = best_feat.fit(X_train, y_train)
 # parametre optimal
 best_feat.best_params_
 
-forest = RandomForestClassifier(n_estimators=500, criterion='gini', max_depth=None, 
-	min_samples_split=2, min_samples_leaf=1, max_features=6, max_leaf_nodes=None, bootstrap=True, oob_score=True)
+forest = RandomForestClassifier(n_estimators=100, criterion='gini', max_depth=None, 
+	min_samples_split=2, min_samples_leaf=1, max_features='auto', max_leaf_nodes=None, bootstrap=True, oob_score=True)
 
 # Apprentissage
 forest = forest.fit(X_train,y_train)
