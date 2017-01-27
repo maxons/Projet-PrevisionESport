@@ -87,6 +87,70 @@ col_nan_40[np.where(col_nan_40 > 0)[0]]
 # On garde les individus ayant un nombre <= 3 valeurs manquantes
 
 
+# Il faut verifier que les memes variables sont touchees pour les datasets de test
+
+
+
+
+game_test_f = "ML_TEST/game_teams_test.csv"
+game_t = pd.read_csv(game_test_f)
+game_t = fd.replaceTFgame(game_t)
+
+player_test_f = "ML_TEST/game_player_teams_test.csv"
+player_t = pd.read_csv(player_test_f)
+player_t = fd.replaceTFplayer(player_t)
+
+
+
+nan_game_t = nan_per_ind(game_t)
+nan_player_t = nan_per_ind(player_t)
+
+pd.crosstab(index = nan_game_t[0], columns = "nbLines")
+# 9 variables impliquées ou rien
+pd.crosstab(index = nan_player_t[0], columns = "nbLines")
+# 1-2-3-39 ou 40 variables
+
+plt.figure(1)
+plt.subplot(211)
+plt.hist(nan_game_t)
+plt.subplot(212)
+plt.hist(nan_player_t)
+plt.show()
+
+# On veut savoir pour chacun des cas quelles sont les variables qui sont touchees
+# Donnees des matches
+nb_nan_t = (game_t.apply(np.isnan)*1).apply(sum,0)
+
+# Donnees des joueurs
+# Individu par individu, le nombre de valeurs manquantes
+nb_nan_t = (player_t.apply(np.isnan)*1).apply(sum,1)
+
+# On regarde pour chacune des classes obtenues les variables impliquees
+# Indices de(s) individu(s) ou on a x valeurs manquantes
+nan_1_t = np.where(nb_nan_t == 1)[0]
+# Somme sur chaque variable pour savoir combien de fois la variable est impliquee pour x valeurs manquantes
+col_nan_1_t = (player_t.loc[nan_1_t].apply(np.isnan)*1).apply(sum, 0)
+
+nan_2_t = np.where(nb_nan_t == 2)[0]
+col_nan_2_t = (player_t.loc[nan_2_t].apply(np.isnan)*1).apply(sum, 0)
+
+nan_3_t = np.where(nb_nan_t == 3)[0]
+col_nan_3_t = (player_t.loc[nan_3_t].apply(np.isnan)*1).apply(sum, 0)
+
+nan_39_t = np.where(nb_nan_t == 39)[0]
+col_nan_39_t = (player_t.loc[nan_39_t].apply(np.isnan)*1).apply(sum, 0)
+
+nan_40_t = np.where(nb_nan_t == 40)[0]
+col_nan_40_t = (player_t.loc[nan_40_t].apply(np.isnan)*1).apply(sum, 0)
+
+# On regarde uniquement les variables impliquees pour x valeurs manquantes
+col_nan_1_t[np.where(col_nan_1_t > 0)[0]]
+col_nan_2_t[np.where(col_nan_2_t > 0)[0]]
+col_nan_3_t[np.where(col_nan_3_t > 0)[0]]
+col_nan_39_t[np.where(col_nan_39_t > 0)[0]]
+col_nan_40_t[np.where(col_nan_40_t > 0)[0]]
+
+
 #------------
 # Approches pour estimation: fancyimpute
 #------------
