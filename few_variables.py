@@ -73,9 +73,33 @@ game = game.drop(col_to_drop, 1)
 victory = (game['winner_id'] == game['team_id'])*1
 game['victory'] = victory
 
+player.sort_values(by = ['game_id', 'team_id', 'gold_earned'], inplace = True)
+X = player.drop(['game_id', 'team_id', 'player_id'], 1)
 
+n = int(X.shape[0]/5)
+m = X.shape[1]
+M = m*5
 
+# Matrice qui va contenir toutes les variables
+res = np.arange(n*M).reshape(n, M)
+# On calcule les sommes
+for ii in range(0, n):
+	res[ii][0:6] = X.loc[ii]
+	res[ii][6:12] = X.loc[ii+1] 
+	res[ii][12:18] = X.loc[ii+2]
+	res[ii][18:24] = X.loc[ii+3]
+	res[ii][24:30] = X.loc[ii+4]
 
+res = pd.DataFrame(res)
+
+# On range la matrice obtenu dans game
+n = game.shape[0]
+
+game.index = (range(0, n))
+game = game.join(res)
+
+X = game.drop(['game_id', 'winner_id', 'team_id', 'victory'], 1)
+y = game['victory']
 
 
 
