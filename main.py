@@ -91,7 +91,7 @@ print(1-forest.oob_score_)
 
 # Erreur de prevision sur le test
 1-forest.score(X_test_pca,y_test)
-# 0.0875
+# 0.0824
 
 # On obtient une meilleure prediction sans faire de ACP
 # Prendre plus de composantes?
@@ -123,14 +123,14 @@ best_feat = best_feat.fit(X_train, y_train)
 best_feat.best_params_
 
 forest = RandomForestClassifier(n_estimators=500, criterion='gini', max_depth=None, 
-	min_samples_split=2, min_samples_leaf=1, max_features=5, max_leaf_nodes=None, bootstrap=True, oob_score=True)
+	min_samples_split=2, min_samples_leaf=1, max_features=6, max_leaf_nodes=None, bootstrap=True, oob_score=True)
 
 # Apprentissage
 forest = forest.fit(X_train,y_train)
 print(1-forest.oob_score_)
 # erreur de prévision sur le test
 1-forest.score(X_test,y_test)
-#0.0336
+#0.0356
 
 # Prevision
 y_chap = forest.predict(X_test)

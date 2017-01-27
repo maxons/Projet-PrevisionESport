@@ -24,6 +24,7 @@ def replaceTFplayer (data):
 		data[col].replace(['t','f'], [1,0], inplace = True)
 	return(data)
 
+# Nombre de nan par individu
 def nan_per_ind (data):
 	import pandas as pd
 	import numpy as np
@@ -31,6 +32,7 @@ def nan_per_ind (data):
 	res = pd.DataFrame(nb_nan[np.where(nb_nan > 0)[0]])
 	return res
 
+# Precisions dans "nan_study.py"
 def impute_player (player):
 	import pandas as pd
 	import numpy as np
@@ -80,15 +82,6 @@ def impute_player (player):
 	imp = Imputer(missing_values='NaN', strategy='mean', axis=0)
 	player[colToRem] = imp.fit_transform(player[colToRem])
 	return(player)
-
-
-# player_ini = player
-
-# player = player_ini
-
-# player[colToRem]
-# player.loc[17518]
-
 
 def prepareData (file_game, file_players):
 	import pandas as pd
