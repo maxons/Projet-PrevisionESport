@@ -273,7 +273,7 @@ player[colToRem] = imp.fit_transform(player[colToRem])
 
 
 
-
+# Maintenant que la procedure est mise en place, on va creer une fonction reproduisant ces etapes
 
 
 
