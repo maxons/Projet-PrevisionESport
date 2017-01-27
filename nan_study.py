@@ -17,6 +17,13 @@ player_train_f = "ML_TEST/game_player_teams_train.csv"
 player = pd.read_csv(player_train_f)
 player = fd.replaceTFplayer(player)
 
+
+
+#------------
+# Etude de la distribution des NaN
+#------------
+
+
 def nan_per_ind (data):
 	nb_nan = (data.apply(np.isnan)*1).apply(sum,1)
 	res = pd.DataFrame(nb_nan[np.where(nb_nan > 0)[0]])
@@ -79,29 +86,86 @@ col_nan_40[np.where(col_nan_40 > 0)[0]]
 # Dans les cas ou il nous manque 2 ou 3 variables, on va estimer les valeurs manquantes grace a du kNN
 # On garde les individus ayant un nombre <= 3 valeurs manquantes
 
+
+#------------
+# Approches pour estimation: fancyimpute
+#------------
+
 # On doit retirer les trois premieres colonnes
+X = player.drop(['game_id', 'team_id', 'player_id'], 1)
+X['champion_id'] = X['champion_id'].astype('category')
 
-X_incomplete = player.drop(['game_id', 'team_id', 'player_id'], 1)
+X['first_tower_kill'] = X['first_tower_kill'].astype('category')
+X['first_tower_assist'] = X['first_tower_assist'].astype('category')
+X['first_inhibitor_kill'] = X['first_inhibitor_kill'].astype('category')
+X['first_inhibitor_assist'] = X['first_inhibitor_assist'].astype('category')
+X['first_blood_assist'] = X['first_blood_assist'].astype('category')
+X['first_blood_kill'] = X['first_blood_kill'].astype('category')
 
+# Plus de 3 valeurs manquantes?
 to_keep = np.where(nb_nan < 4)[0]
+X = X.loc[to_keep]
 
 from fancyimpute import KNN
-X = KNN(k=3).complete(X_incomplete.loc[to_keep])
+X_complete = pd.DataFrame(KNN(k=3).complete(X))
 
 # N'est pas satisfaisant car les estimations ne sont pas discretes. 
 
+#------------
+# Creation propre methode
+#------------
+
+# On va le faire "a la main"
+from sklearn.neighbors import NearestNeighbors
+
+X = player.drop(['game_id', 'team_id', 'player_id'], 1)
+X['champion_id'] = X['champion_id'].astype('category')
 
 
 
+# On se place dans le cas ou on a deux valeurs manquantes
 
 
+# On retire les deux colonnes porteuses des valeurs
+colToRem = col_nan_2[np.where(col_nan_2 > 0)[0]].index
+X_temp = X.drop(colToRem, 1)
+# On retire les individus ayant plus de deux valeurs manquantes, entre autre 3
+to_rem = np.where(nb_nan > 2)[0]
+X_2 = X_temp.drop(X_temp.index[to_rem], 0)
+
+# On utilise 'ball_tree' car adaptee bcp variables
+nbrs = NearestNeighbors(n_neighbors=6, algorithm='ball_tree').fit(X_2)
+distances, indices = nbrs.kneighbors(X_2)
+# indices renvoie les indices sur plus proches voisins
+# mais il a remis les indices a 0, pas de memoire des vrais indices de X_2
+
+# Variable qui contient les deux colonnes que l'on souhaite reconstruire
+col_with_info = X[colToRem]
+col_with_info = col_with_info.drop(col_with_info.index[to_rem], 0)
+
+np.isnan
+
+from scipy import stats
 
 
+# Lignes qui nous interessent
+to_see = np.where((col_with_info.apply(np.isnan)*1).apply(sum, 1) > 0)[0]
+for ind in indices[to_see]:
+	# Vrais indices
+	t_ind = col_with_info.index[ind]
+	# mode des valeurs a remplacer
+	vals = col_with_info.loc[t_ind].apply(stats.mode,0)
+	# On effectue la mise a jour
+	player = player.set_value(t_ind[0], colToRem[0], vals[0][0][0])
+	player = player.set_value(t_ind[0], colToRem[1], vals[1][0][0])
 
+# On verifie que player n'a plus d'individus avec deux variables manquantes
 
+nb_nan = (player.apply(np.isnan)*1).apply(sum,1)
+nan_2 = np.where(nb_nan == 2)[0]
+col_nan_2 = (player.loc[nan_2].apply(np.isnan)*1).apply(sum, 0)
 
-
-
+# C'est bon!
 
 
 
