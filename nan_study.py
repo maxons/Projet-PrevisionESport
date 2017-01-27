@@ -70,11 +70,25 @@ col_nan_3[np.where(col_nan_3 > 0)[0]]
 col_nan_39[np.where(col_nan_39 > 0)[0]]
 col_nan_40[np.where(col_nan_40 > 0)[0]]
 
+# On remarque que dans chacun des classes, il manque toujours les meme variable
+# Mais entre chaque classe on ne retrouve pas les meme variables, sauf dans les deux dernieres
+# La difference entre 39 et 40 se fait pour le champion_id
 
+# Le cas ou on a 1 valeur manquante ne nous interesse pas car il ne concerne que le player_id
 
+# Dans les cas ou il nous manque 2 ou 3 variables, on va estimer les valeurs manquantes grace a du kNN
+# On garde les individus ayant un nombre <= 3 valeurs manquantes
 
+# On doit retirer les trois premieres colonnes
 
+X_incomplete = player.drop(['game_id', 'team_id', 'player_id'], 1)
 
+to_keep = np.where(nb_nan < 4)[0]
+
+from fancyimpute import KNN
+X = KNN(k=3).complete(X_incomplete.loc[to_keep])
+
+# N'est pas satisfaisant car les estimations ne sont pas discretes. 
 
 
 
