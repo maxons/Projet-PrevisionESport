@@ -1,10 +1,10 @@
 import pandas as pd
 
 #------------
-# Fonctions qui permettent de mettre en place les données
+# Fonctions qui permettent de mettre en place les donnees
 #------------
 
-# Affiche l'ensemble des données contenues dans x
+# Affiche l'ensemble des donnees contenues dans x
 def print_full(x):
     pd.set_option('display.max_rows', len(x))
     print(x)
@@ -108,10 +108,10 @@ def prepareData (file_game, file_players):
 	bool = pd.Series(player['game_id']).isin(game_to_remove)
 	player = player[:][~bool]
 	# On retourne sur game.
-	# On veut remplacer créer une nouvelle variable valant 1 si l'équipe a gg, 0 sinon
+	# On veut remplacer creer une nouvelle variable valant 1 si l'equipe a gg, 0 sinon
 	victory = (game['winner_id'] == game['team_id'])*1
 	game['victory'] = victory
-	# Grace a notre façon de trier, on a juste a faire la somme de cinq elements a la suite pour avoir la somme par equipe
+	# Grace a notre facon de trier, on a juste a faire la somme de cinq elements a la suite pour avoir la somme par equipe
 	player_temp = player.drop(['game_id', 'team_id', 'player_id', 'champion_id','first_blood_kill',
 	 'first_blood_assist', 'first_tower_kill', 'first_tower_assist', 'first_inhibitor_kill', 'first_inhibitor_assist'], 1)
 	# On retire les valeurs manquantes de 'killing_sprees' et 'double_kills' en les estimant par la moyenne
